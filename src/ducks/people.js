@@ -1,5 +1,5 @@
 import {appName} from '../config'
-import {Record} from 'immutable'
+import {Record, List} from 'immutable'
 
 /**
  * Constants
@@ -13,7 +13,7 @@ export const ADD_PEOPLE_ENTRY = `${prefix}/ADD_PEOPLE`
  * Reducer
  * */
 export const ReducerRecord = Record({
-    people: []
+    list: List()
 })
 
 export default function reducer(state = new ReducerRecord(), action) {
@@ -21,7 +21,7 @@ export default function reducer(state = new ReducerRecord(), action) {
 
     switch (type) {
         case ADD_PEOPLE_ENTRY:
-            return state.set('people', state.get('people').push(payload.entry))
+            return state.set('list', state.get('list').push(payload.entry))
 
         default:
             return state
