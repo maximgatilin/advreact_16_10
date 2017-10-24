@@ -14,7 +14,9 @@ export const SIGN_UP_START = `${prefix}/SIGN_UP_START`
 export const SIGN_UP_SUCCESS = `${prefix}/SIGN_UP_SUCCESS`
 export const SIGN_UP_ERROR = `${prefix}/SIGN_UP_ERROR`
 
+export const SIGN_IN_START = `${prefix}/SIGN_IN_START`
 export const SIGN_IN_SUCCESS = `${prefix}/SIGN_IN_SUCCESS`
+export const SIGN_IN_ERROR = `${prefix}/SIGN_IN_ERROR`
 
 /**
  * Reducer
@@ -60,6 +62,13 @@ export function signUp(email, password) {
     }
 }
 
+export function signIn(email, password) {
+    return {
+        type: SIGN_IN_START,
+        payload: { email, password }
+    }
+}
+
 firebase.auth().onAuthStateChanged(user => {
     if (!user) return
 
@@ -81,7 +90,6 @@ export function * signUpSaga() {
 
         try {
             const user = yield call([auth, auth.createUserWithEmailAndPassword], payload.email, payload.password)
-            //const user = apply(auth, createUserWithEmailAndPassword, [email, password])
 
             yield put({
                 type: SIGN_UP_SUCCESS,
@@ -96,8 +104,31 @@ export function * signUpSaga() {
     }
 }
 
+export function * signInSaga() {
+    const auth = firebase.auth()
+
+    while (true) {
+        const {payload} = yield take(SIGN_IN_START)
+
+        try {
+            const user = yield call([auth, auth.signInWithEmailAndPassword], payload.email, payload.password)
+
+            yield put({
+                type: SIGN_IN_SUCCESS,
+                payload: {user}
+            })
+        } catch (error) {
+            yield put({
+                type: SIGN_IN_ERROR,
+                payload: {error}
+            })
+        }
+    }
+}
+
 export function * saga() {
     yield all([
-        signUpSaga()
+        signUpSaga(),
+        signInSaga()
     ])
 }
