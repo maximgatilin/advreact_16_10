@@ -12,12 +12,13 @@ import {
 } from './auth'
 import {call, put, take} from 'redux-saga/effects'
 import firebase from 'firebase';
+import {reset} from "redux-form";
 
 /**
  * Sign in
  * */
 
-it('should sign in successfully', async () => {
+it('should sign in successfully', () => {
     const authData = {
         email: 'test@test.com',
         password: '12345678'
@@ -42,9 +43,11 @@ it('should sign in successfully', async () => {
         type: SIGN_IN_SUCCESS,
         payload: {user: mockUser}
     }))
+
+    expect(gen.next().value).toEqual(put(reset('auth')));
 })
 
-it('should sign in with error', async () => {
+it('should sign in with error', () => {
     const authData = {
         email: 'test@test.com',
         password: '12345678'
@@ -72,7 +75,7 @@ it('should sign in with error', async () => {
  * Sign up
  * */
 
-it('should sign up successfully', async () => {
+it('should sign up successfully', () => {
     const authData = {
         email: 'test@test.com',
         password: '12345678'
@@ -97,9 +100,11 @@ it('should sign up successfully', async () => {
         type: SIGN_UP_SUCCESS,
         payload: {user: mockUser}
     }))
+
+    expect(gen.next().value).toEqual(put(reset('auth')));
 })
 
-it('should sign up with error', async () => {
+it('should sign up with error', () => {
     const authData = {
         email: 'test@test.com',
         password: '12345678'

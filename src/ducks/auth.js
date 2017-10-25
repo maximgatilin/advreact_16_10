@@ -3,6 +3,7 @@ import {Record} from 'immutable'
 import firebase from 'firebase'
 import {createSelector} from 'reselect'
 import {call, put, all, take} from 'redux-saga/effects'
+import {reset} from 'redux-form'
 
 /**
  * Constants
@@ -95,6 +96,8 @@ export function * signUpSaga() {
                 type: SIGN_UP_SUCCESS,
                 payload: {user}
             })
+
+            yield put(reset('auth'))
         } catch (error) {
             yield put({
                 type: SIGN_UP_ERROR,
@@ -117,6 +120,8 @@ export function * signInSaga() {
                 type: SIGN_IN_SUCCESS,
                 payload: {user}
             })
+
+            yield put(reset('auth'))
         } catch (error) {
             yield put({
                 type: SIGN_IN_ERROR,

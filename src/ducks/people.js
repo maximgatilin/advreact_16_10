@@ -2,6 +2,7 @@ import {appName} from '../config'
 import {Record, List} from 'immutable'
 import {put, call, takeEvery} from 'redux-saga/effects'
 import {generateId} from './utils'
+import {reset} from 'redux-form';
 
 /**
  * Constants
@@ -66,6 +67,8 @@ export function * addPersonSaga(action) {
     console.log('---', effect)
 
     yield effect
+
+    yield put(reset('person'))
 }
 
 export function * saga() {
