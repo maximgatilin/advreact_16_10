@@ -3,6 +3,7 @@ import {
     signUp,
     signInSaga,
     signUpSaga,
+    redirectSaga,
     SIGN_IN_START,
     SIGN_IN_SUCCESS,
     SIGN_IN_ERROR,
@@ -11,8 +12,9 @@ import {
     SIGN_UP_ERROR
 } from './auth'
 import {call, put, take} from 'redux-saga/effects'
-import firebase from 'firebase';
-import {reset} from "redux-form";
+import firebase from 'firebase'
+import {reset} from 'redux-form'
+import {push} from 'react-router-redux'
 
 /**
  * Sign in
@@ -127,3 +129,18 @@ it('should sign up with error', () => {
         payload: {error: mockError}
     }))
 })
+
+
+/**
+ * Redirect
+ * */
+
+it('should redirect after successful login', () => {
+    const gen = redirectSaga()
+
+    expect(gen.next().value).toEqual(take(SIGN_IN_SUCCESS));
+
+    expect(gen.next().value).toEqual(put(push('/people')))
+})
+
+

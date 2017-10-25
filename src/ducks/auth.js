@@ -4,6 +4,7 @@ import firebase from 'firebase'
 import {createSelector} from 'reselect'
 import {call, put, all, take} from 'redux-saga/effects'
 import {reset} from 'redux-form'
+import {push} from 'react-router-redux'
 
 /**
  * Constants
@@ -131,9 +132,18 @@ export function * signInSaga() {
     }
 }
 
+export function * redirectSaga() {
+    while (true) {
+        yield take(SIGN_IN_SUCCESS)
+
+        yield put(push('/people'))
+    }
+}
+
 export function * saga() {
     yield all([
         signUpSaga(),
-        signInSaga()
+        signInSaga(),
+        redirectSaga()
     ])
 }
