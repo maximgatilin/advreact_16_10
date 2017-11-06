@@ -5,14 +5,15 @@ import {connect} from 'react-redux'
 
 class Basket extends Component {
     render() {
-        const {connectDropTarget} = this.props;
+        const {connectDropTarget, hovered} = this.props;
+        const basketColor = hovered ? 'red': '#888';
         const style = {
             width: '300px',
             height: '100px',
-            border: '1px solid red',
+            border: `1px solid ${basketColor}`,
             textAlign: 'center',
             lineHeight: '100px',
-            color: 'red'
+            color: basketColor
         };
         return connectDropTarget(<div style={style}>Basket</div>);
     }
