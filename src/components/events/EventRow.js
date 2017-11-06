@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import {DragSource} from 'react-dnd'
+import {getEmptyImage} from 'react-dnd-html5-backend'
+import DragPreview from './EventDragPreview'
 
 class EventRow extends Component {
     static propTypes = {
@@ -7,7 +9,7 @@ class EventRow extends Component {
     };
 
     componentDidMount() {
-        // this.props.connectPreview(getEmptyImage())
+        this.props.connectPreview(getEmptyImage())
     }
 
     handleClick = (data) => () => {
@@ -32,7 +34,8 @@ class EventRow extends Component {
 const spec = {
     beginDrag(props) {
         return {
-            id: props.event.uid
+            id: props.event.uid,
+            DragPreview
         }
     },
 

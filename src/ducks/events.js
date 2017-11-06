@@ -89,6 +89,8 @@ export const eventListSelector = createSelector(entitiesSelector, entities => en
 export const selectedEventsSelector = createSelector(entitiesSelector, selectionSelector, (entities, selection) =>
     selection.map(uid => entities.get(uid))
 )
+export const idSelector = (state, props) => props.id
+export const eventSelector = createSelector(entitiesSelector, idSelector, (entities, id) => entities.get(id))
 
 /**
  * Action Creators
