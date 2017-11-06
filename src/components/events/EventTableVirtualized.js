@@ -3,6 +3,7 @@ import {Table, Column} from 'react-virtualized'
 import {connect} from 'react-redux'
 import {fetchAllEvents, selectEvent, selectedEventsSelector, eventListSelector, loadedSelector, loadingSelector} from '../../ducks/events'
 import Loader from '../common/Loader'
+import EventRow from './EventRow'
 import 'react-virtualized/styles.css'
 
 class EventTableVirtualized extends Component {
@@ -19,13 +20,14 @@ class EventTableVirtualized extends Component {
         return (
             <Table
                 height={500}
-                width = {600}
+                width = {700}
                 rowHeight={40}
                 rowHeaderHeight={40}
                 rowGetter={this.rowGetter}
                 rowCount={this.props.events.length}
                 overscanRowCount={0}
-                onRowClick={({ rowData }) => this.props.selectEvent(rowData.uid)}
+                onRowClick={this.props.selectEvent}
+                rowRenderer={this.rowRenderer}
             >
                 <Column
                     dataKey = 'title'
@@ -45,6 +47,8 @@ class EventTableVirtualized extends Component {
             </Table>
         )
     }
+
+    rowRenderer = ({ index, key, style, onRowClick }) => <EventRow person = {this.props.events[index]} key = {key} style = {style} onRowClick={onRowClick}/>;
 
     rowGetter = ({ index }) => this.props.events[index]
 }
