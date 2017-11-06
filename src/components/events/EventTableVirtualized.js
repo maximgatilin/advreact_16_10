@@ -48,7 +48,7 @@ class EventTableVirtualized extends Component {
         )
     }
 
-    rowRenderer = ({ index, key, style, onRowClick }) => <EventRow person = {this.props.events[index]} key = {key} style = {style} onRowClick={onRowClick}/>;
+    rowRenderer = ({ index, key, style, onRowClick }) => <EventRow event = {this.props.events[index]} key = {key} style = {style} onRowClick={onRowClick}/>;
 
     rowGetter = ({ index }) => this.props.events[index]
 }

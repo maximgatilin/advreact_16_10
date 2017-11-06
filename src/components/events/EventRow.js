@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {DragSource} from 'react-dnd'
 
 class EventRow extends Component {
     static propTypes = {
@@ -19,13 +20,31 @@ class EventRow extends Component {
             marginRight: '15px',
             width: '200px'
         };
-        const {style, person} = this.props;
-        return <div style={style} onClick={this.handleClick(person)}>
-            <span style={cellStyle}>{person.title}</span>
-            <span style={cellStyle}>{person.where}</span>
-            <span style={cellStyle}>{person.when}</span>
-        </div>
+        const {style, event, connectDragSource} = this.props;
+        return connectDragSource(<div style={style} onClick={this.handleClick(event)}>
+            <span style={cellStyle}>{event.title}</span>
+            <span style={cellStyle}>{event.where}</span>
+            <span style={cellStyle}>{event.when}</span>
+        </div>)
     }
 }
 
-export default EventRow
+const spec = {
+    beginDrag(props) {
+        return {
+            id: props.event.uid
+        }
+    },
+
+    endDrag() {
+        console.log('---', 'endDrag')
+    }
+};
+
+const collect = (connect, monitor) => ({
+    connectDragSource: connect.dragSource(),
+    connectPreview: connect.dragPreview(),
+    isDragging: monitor.isDragging()
+});
+
+export default DragSource('event', spec, collect)(EventRow)
