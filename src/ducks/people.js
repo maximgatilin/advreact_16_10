@@ -6,6 +6,7 @@ import {delay, eventChannel} from 'redux-saga'
 import firebase from 'firebase'
 import {createSelector} from 'reselect'
 import {fbToEntities} from './utils'
+import {LOCATION_CHANGE} from 'react-router-redux';
 
 /**
  * Constants
@@ -160,15 +161,16 @@ export const syncPeopleWithShortPollingSaga = function * () {
 }
 
 export const cancelableSyncSaga = function * () {
-    const res = yield race({
-        sync: syncPeopleWithShortPollingSaga(),
-        timeout: delay(6000)
-    })
-/*
-    const task = yield fork(syncPeopleWithShortPollingSaga)
-    yield delay(6000)
-    yield cancel(task)
-*/
+    let task = yield fork(realtimePeopleSyncSaga)
+
+    while (true) {
+        const {payload: {pathname}} = yield take(LOCATION_CHANGE);
+        if (pathname !== '/people') {
+            yield cancel(task);
+        } else {
+            task = yield fork(realtimePeopleSyncSaga)
+        }
+    }
 }
 
 const createPeopleSocket = () => eventChannel(emit => {
@@ -183,18 +185,25 @@ const createPeopleSocket = () => eventChannel(emit => {
 export const realtimePeopleSyncSaga = function * () {
     const chan = yield call(createPeopleSocket)
 
-    while (true) {
-        const { data } = yield take(chan)
+    try {
+        while (true) {
+            const { data } = yield take(chan)
 
-        yield put({
-            type: FETCH_ALL_SUCCESS,
-            payload: data.val()
-        })
+            yield put({
+                type: FETCH_ALL_SUCCESS,
+                payload: data.val()
+            })
+        }
+    } finally {
+        if (yield cancelled()) {
+            chan.close();
+            console.log('People channel closed');
+        }
     }
 }
 
 export function * saga() {
-    yield spawn(realtimePeopleSyncSaga)
+    yield spawn(cancelableSyncSaga)
 
     yield all([
         takeEvery(ADD_PERSON_REQUEST, addPersonSaga),
