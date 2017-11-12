@@ -17,7 +17,7 @@ class PeopleList extends Component {
         return (
             <List
                 rowCount={this.props.people.length}
-                height={200}
+                height={600}
                 width={500}
                 rowHeight={100}
                 rowRenderer={this.rowRenderer}

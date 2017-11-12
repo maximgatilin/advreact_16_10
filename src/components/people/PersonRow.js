@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {DragSource} from 'react-dnd'
 import {getEmptyImage} from 'react-dnd-html5-backend'
 import DragPreview from './PersonDragPreview'
+import {Motion, spring, presets} from 'react-motion'
+
 
 class PersonRow extends Component {
-    static propTypes = {
-
-    };
+    static propTypes = {};
 
     componentDidMount() {
         this.props.connectPreview(getEmptyImage())
@@ -15,10 +15,19 @@ class PersonRow extends Component {
     render() {
         const {style, person, connectDragSource, isDragging} = this.props
         return (
-            <div style = {{...style, opacity: isDragging ? 0.1 : 1}}>
-                {connectDragSource(<h2>{person.firstName} {person.lastName}</h2>)}
-                <h3>{person.email}</h3>
-            </div>
+            <Motion
+                defaultStyle={{opacity: 0}}
+                style={{opacity: spring(1, presets.gentle/*{ stiffness: 150, damping: 1}*/)}}
+            >
+                {
+                    interpolated => (
+                        <div style={{...style, opacity: isDragging ? 0.1 : 1,...interpolated}}>
+                            {connectDragSource(<h2>{person.firstName} {person.lastName}</h2>)}
+                            <h3>{person.email}</h3>
+                        </div>
+                    )
+                }
+            </Motion>
         )
     }
 }
