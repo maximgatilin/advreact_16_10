@@ -165,7 +165,7 @@ export const cancelableSyncSaga = function * () {
 
     while (true) {
         const {payload: {pathname}} = yield take(LOCATION_CHANGE);
-        if (pathname !== '/people') {
+        if (pathname !== '/people' && pathname !== '/admin') {
             yield cancel(task);
         } else {
             task = yield fork(realtimePeopleSyncSaga)
